@@ -19,7 +19,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 	
 	private final UserService userService;
 	
-
+ 
 	public AuthTokenFilter(UserService userService) {
 		super();
 		this.userService = userService;
@@ -35,7 +35,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 			if (email != null) {
 				var user = userService.loadUserByUsername(email);
 			    if (user != null) {
-			    	var auth = new UsernamePasswordAuthenticationToken(user,null);
+			    	var auth = new UsernamePasswordAuthenticationToken(user,null, null);
 			    	auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 			    	SecurityContextHolder.getContext().setAuthentication(auth);
 			    }

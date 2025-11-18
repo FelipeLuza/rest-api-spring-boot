@@ -2,6 +2,7 @@ package br.edu.atitus.api_example.configs;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -27,10 +28,12 @@ public class ConfigSecurity {
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http, AuthTokenFilter authTokenFilter) throws Exception {
         http
+            .cors(cors -> {})
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
+            		.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                     .requestMatchers("/ws**", "/ws/**").authenticated()
                     .anyRequest().permitAll())
             .addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
@@ -58,7 +61,7 @@ public class ConfigSecurity {
                         "http://localhost:5173",
                         "https://atitus-maps-frontend.netlify.app"
                     )
-                    .allowedMethods("*")
+                    .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                     .allowedHeaders("*")
                     .allowCredentials(false);      
       
